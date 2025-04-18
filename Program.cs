@@ -327,6 +327,9 @@ class Program
 {
     static void Main()
     {
+        int bankId = 0;
+        int categotyId = 0;
+        int operationId = 0;
         var bankAccountFacade = new BankAccountFacade();
         var categoryFacade = new CategoryFacade();
         var operationFacade = new OperationFacade();
@@ -335,22 +338,55 @@ class Program
         while (true)
         {
             Console.WriteLine("1. Добавить счет");
-            Console.WriteLine("2. Добавить транзакцию");
-            Console.WriteLine("3. Просмотреть транзакции");
+            Console.WriteLine("2. Добавить категорию");
+            Console.WriteLine("3. Добавить транзакцию");
             Console.WriteLine("0. Выход");
             var choice = Console.ReadLine();
 
             switch (choice)
             {
                 case "1":
+                    Console.Write("Введите название счета: ");
+                    var accountName = Console.ReadLine();
+
+                    bankAccountFacade.CreateAccount(bankId++, accountName);
+                    Console.WriteLine($"Счёт {accountName} создан. Id: {bankId}\n");
                     break;
+
                 case "2":
+                    Console.Write("Введите тип категории: ");
+                    var categoryType = Console.ReadLine();
+                    Console.Write("Введите название категории: ");
+                    var categoryName = Console.ReadLine();
+
+                    categoryFacade.CreateCategory(categotyId++, categoryType, categoryName);
+                    Console.WriteLine($"Категория {categoryName} создана. Id {categotyId}\n");
                     break;
+
                 case "3":
+                    Console.Write("Введите ID счета: ");
+                    var accountId = int.Parse(Console.ReadLine());
+                    Console.Write("Введите тип операции (дебет/кредит): ");
+                    var operationType = Console.ReadLine();
+                    Console.Write("Введите сумму операции: ");
+                    var amount = int.Parse(Console.ReadLine());
+                    Console.Write("Введите описание операции: ");
+                    var description = Console.ReadLine();
+                    DateTime date;
+                    string[] formats = { "dd.MM.yyyy" };
+                    Console.Write("Введите дату в формате dd.MM.yyyy: ");
+                    string input = Console.ReadLine();
+                    DateTime.TryParseExact(input, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out date);
+                    Console.Write("Введите ID категории: ");
+                    var categoryId = int.Parse(Console.ReadLine());
+
+                    operationFacade.CreateOperation(operationId++,operationType, accountId, amount, date, description, categoryId);
+                    Console.WriteLine($"Транзакция произведена. Id: {operationId}\n");
                     break;
                 case "0":
                     return;
                 default:
+                    Console.WriteLine("Неверный выбор. Попробуйте еще раз.");
                     break;
             }
         }
